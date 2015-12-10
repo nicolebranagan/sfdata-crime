@@ -39,3 +39,7 @@ dist_from_cable <- min_dist_by_type(crimeset, sfstations, 5)
 print("completed from cable")
 dist_from_bart  <- min_dist_by_type(crimeset, sfstations, 6)
 print("completed from bart")
+
+dist_frame <- data.frame(trolley = dist_fromtrolley, bus = dist_from_bus, cable = dist_from_cable, bart = dist_from_bart)
+dist_frame$min <- apply(dist_frame, 1, min)
+write.csv(dist_frame, './min_dist.csv')
