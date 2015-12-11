@@ -29,7 +29,7 @@ min_dist_by_type <- function(crimes, sfstations, type) {
 }
 
 # Sample a subset
-crimeset = crimedata[sample(nrow(crimedata), 10000), ]
+crimeset = crimedata[sample(nrow(crimedata), 50000), ]
 
 dist_fromtrolley <- min_dist_by_type(crimeset, sfstations, 0)
 print("completed from trolley")
