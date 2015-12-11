@@ -224,27 +224,44 @@ ScatterPlot.prototype.draw = function(context) {
     
     context.rotate(+Math.PI/2);
     context.textAlign = "center";
+    
+    this.drawLegend(context);
 }
 
 ScatterPlot.prototype.getDataSet = function(dataset) {
     this.datasets.push(dataset);
+    return dataset;
 }
 
 ScatterPlot.prototype.clearDataSets = function() {
     this.datasets = new Array();
 }
 
+ScatterPlot.prototype.drawLegend = function(context) {
+    for (var i = 0; i < this.datasets.length; i++) {
+        var data = this.datasets[i];
+        context.beginPath();
+        context.strokeStyle = data.color;
+        context.moveTo(this.x + this.w - 125, this.y + 10 + 16 * i);
+        context.lineTo(this.x + this.w - 100, this.y + 10 + 16 * i);
+        context.stroke();
+        context.font = "15px serif";
+        context.textAlign = "left";
+        context.fillText(data.name, this.x + this.w - 90, this.y + 10 + 16 * i);
+    }
+}
+
 ScatterPlot.prototype.autoSetMinMaxX = function() {
-    this.xmax = -100000;
-    this.xmin = 100000;
+    this.xmax = -10000;
+    this.xmin = 10000;
     
     for (var i = 0; i < this.datasets.length; i++) {
         var data = this.datasets[i];
+        if (this.xmin > data.xdata[0])
+            this.xmin = data.xdata[0];
         for (var j = 1; j < data.xdata.length; j++) {
-            if (data.xdata[j] > this.xmax)
+            if ((data.xdata[j] > this.xmax) && (data.ydata[j] > 0))
                 this.xmax = data.xdata[j];
-            if (data.xdata[j] < this.xmin)
-                this.xmin = data.xdata[j];
         }
     }
 }
@@ -281,5 +298,6 @@ ScatterPlot.prototype.mouseMove = function(event) {
 function PlotDataSet(options) {
     this.xdata = options.x;
     this.ydata = options.y;
+    this.name = options.name;
     this.color = options.color || "#F00";
 }
