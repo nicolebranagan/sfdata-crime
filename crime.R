@@ -40,6 +40,16 @@ print("completed from cable")
 dist_from_bart  <- min_dist_by_type(crimeset, sfstations, 6)
 print("completed from bart")
 
-dist_frame <- data.frame(trolley = dist_fromtrolley, bus = dist_from_bus, cable = dist_from_cable, bart = dist_from_bart)
+dist_frame <- data.frame(category = crimeset$Category, trolley = dist_fromtrolley, bus = dist_from_bus, cable = dist_from_cable, bart = dist_from_bart)
 dist_frame$min <- apply(dist_frame, 1, min)
+
+# Clean data
+# First we remove the hall of Justice, a clear outlier
+dist_frame <- dist_frame[crimeset$Location != '(37.775420706711, -122.403404791479)', ]
+crimeset <- crimeset[crimeset$Location != '(37.775420706711, -122.403404791479)', ]
+
+# Then we remove anything with bad location data
+crimeset <- crimeset[dist_frame$bus < 8000, ]
+dist_frame <- dist_frame[dist_frame$bus < 8000, ]
+
 write.csv(dist_frame, './min_dist.csv')
